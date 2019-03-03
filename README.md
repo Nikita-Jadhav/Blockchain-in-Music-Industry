@@ -1,0 +1,2 @@
+# Blockchain using GoLang in Hyperledger 
+Implemeneting Blockchain Technology in Music Industry with IBM Hyperledger Tool with Golang. This was my first Block chain project. The query, permission file are all simple. I have created music files as documents and hashed with a particular ID. When there is a trade of music files the author of music files doesnt change no matter what, hence even after n trades the payement will be directed and copyrights will belong to the actual author irrespetive of the number of distributions it goes through.

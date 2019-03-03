@@ -1,0 +1,30 @@
+/** Sample queries for Commodity Trading business network
+*/
+
+query selectmusicdocuments {
+  description: "Select all music"
+  statement:
+      SELECT org.acme.biznet.Music
+}
+
+query selectmusicdocumentsByExchange {
+  description: "Select all music based on their main exchange"
+  statement:
+      SELECT org.acme.biznet.Music
+          WHERE (mainExchange==_$exchange)
+}
+
+query selectmusicdocumentsByOwner {
+  description: "Select all music based on their owner"
+  statement:
+      SELECT org.acme.biznet.Music
+          WHERE (owner == _$owner)
+}
+
+query selectmusicdocumentsWithHighQuantity {
+  description: "Select music based on quantity"
+  statement:
+      SELECT org.acme.biznet.Music
+          WHERE (quantity > 1)
+}
+

@@ -1,0 +1,80 @@
+'use strict';
+/**
+ * Write your transction processor functions here
+ */
+
+/**
+ * Sample transaction
+ * @param {org.acme.biznet.Trade} trade
+ * @transaction
+ */
+
+/**
+ * Track the trade of a commodity from one trader to another
+ * @param {org.acme.biznet.Trade} trade - the trade to be processed
+ * @transaction
+ */
+function trademusic(Trade) {
+
+    // set the new owner of the commodity
+    Trade.music.owner = Trade.newOwner;
+    return getAssetRegistry('org.acme.biznet.Music')
+        .then(function (assetRegistry) {
+
+            // emit a notification that a trade has occurred
+            var tradeNotification = getFactory().newEvent('org.acme.biznet', 'TradeNotification');
+            tradeNotification.music = Trade.music;
+            emit(tradeNotification);
+
+            // persist the state of the commodity
+            return assetRegistry.update(Trade.music);
+        });
+}
+
+/**
+ * Remove all high volume commodities
+ * @param {org.acme.biznet.RemoveExtraMusicFiles} remove - the remove to be processed
+ * @transaction
+ */
+function RemoveExtraMusicFiles(remove) {
+
+    return getAssetRegistry('org.acme.biznet.Music')
+        .then(function (assetRegistry) {
+            return query('selectmusicdocumentsWithHighQuantity')
+                    .then(function (results) {
+
+                        var promises = [];
+
+                        for (var n = 0; n < results.length; n++) {
+                            var trade = results[n];
+
+                            // emit a notification that a trade was removed
+                            var removeNotification = getFactory().newEvent('org.acme.biznet', 'RemoveNotification');
+                            removeNotification.music = trade;
+                            emit(removeNotification);
+
+                            // remove the commodity
+                            promises.push(assetRegistry.remove(trade));
+                        }
+
+                        // we have to return all the promises
+                        return Promise.all(promises);
+                    });
+        });
+}
+/*
+function onTrade(Trade) {
+    var assetRegistry;
+    var id = Trade.relatedAsset.assetId;
+    return getAssetRegistry('org.acme.biznet.asset.Music')
+        .then(function(ar) {
+            assetRegistry = ar;
+            return assetRegistry.get(id);
+        })
+        .then(function(asset) {
+            asset.value = Trade.newValue;
+            return assetRegistry.update(asset);
+        });
+}
+
+*/
